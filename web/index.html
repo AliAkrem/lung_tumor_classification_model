@@ -3,245 +3,71 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lung Tumor Classification - AI Diagnostics</title>
-        <link rel="stylesheet" href="styles.css" />
-        <link rel="stylesheet" href="drawer-navigation.css" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
+        <title>Lung Tumor Analysis - Redirecting...</title>
+        <meta http-equiv="refresh" content="0;url=classification/index.html" />
+        <style>
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+                    sans-serif;
+                background-color: #1e1e1e;
+                color: #cccccc;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 {
+                margin-bottom: 20px;
+            }
+            p {
+                margin-bottom: 30px;
+            }
+            .loader {
+                border: 5px solid #252526;
+                border-top: 5px solid #007acc;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                animation: spin 1s linear infinite;
+                margin-bottom: 30px;
+            }
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            a {
+                color: #007acc;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
     </head>
     <body>
-        <div class="app-container">
-            <!-- Header -->
-            <header class="header">
-                <div class="header-content">
-                    <div class="logo">
-                        <div class="logo-icon">🫁</div>
-                        <h1 class="app-title">Lung Tumor Classification</h1>
-                    </div>
-                    <div class="header-info">
-                        <span class="model-info"
-                            >EfficientNet • 4 Classes • 99.2% Accuracy</span
-                        >
-                    </div>
-                </div>
-            </header>
+        <div class="loader"></div>
+        <h1>🫁 Lung Tumor Analysis</h1>
+        <p>Redirecting to the new classification page...</p>
+        <p>
+            If you are not redirected automatically,
+            <a href="classification/index.html">click here</a>.
+        </p>
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <div class="content-grid">
-                    <!-- Upload Section -->
-                    <section class="upload-section">
-                        <div class="panel upload-panel">
-                            <div class="panel-header">
-                                <h2 class="panel-title">Upload CT Scan</h2>
-                                <div class="panel-subtitle">
-                                    Supported formats: PNG, JPG, JPEG
-                                </div>
-                            </div>
-
-                            <div class="upload-area" id="uploadArea">
-                                <div class="upload-content">
-                                    <div class="upload-icon">📁</div>
-                                    <div class="upload-text">
-                                        <div class="upload-primary">
-                                            Drop your CT scan image here
-                                        </div>
-                                        <div class="upload-secondary">
-                                            or click to browse files
-                                        </div>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        id="imageInput"
-                                        accept="image/*"
-                                        class="file-input"
-                                    />
-                                </div>
-                            </div>
-
-                            <!-- Image Preview -->
-                            <div
-                                class="image-preview"
-                                id="imagePreview"
-                                style="display: none"
-                            >
-                                <div class="preview-header">
-                                    <span class="preview-title"
-                                        >Selected Image</span
-                                    >
-                                    <button
-                                        class="btn-secondary btn-small"
-                                        id="clearImage"
-                                    >
-                                        Clear
-                                    </button>
-                                </div>
-                                <div class="preview-container">
-                                    <img
-                                        id="previewImg"
-                                        alt="Selected CT scan"
-                                    />
-                                </div>
-                                <div class="image-info" id="imageInfo"></div>
-                            </div>
-
-                            <!-- Action Buttons -->
-                            <div class="action-buttons">
-                                <button
-                                    class="btn-primary"
-                                    id="analyzeBtn"
-                                    disabled
-                                >
-                                    <span class="btn-icon">🔍</span>
-                                    Analyze Image
-                                </button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Results Section -->
-                    <section class="results-section">
-                        <div class="panel results-panel">
-                            <div class="panel-header">
-                                <h2 class="panel-title">Analysis Results</h2>
-                                <div
-                                    class="status-indicator"
-                                    id="statusIndicator"
-                                >
-                                    <div class="status-dot"></div>
-                                    <span class="status-text">Ready</span>
-                                </div>
-                            </div>
-
-                            <!-- Loading State -->
-                            <div
-                                class="loading-state"
-                                id="loadingState"
-                                style="display: none"
-                            >
-                                <div class="loading-spinner"></div>
-                                <div class="loading-text">
-                                    Analyzing your CT scan...
-                                </div>
-                            </div>
-
-                            <!-- Results Content -->
-                            <div
-                                class="results-content"
-                                id="resultsContent"
-                                style="display: none"
-                            >
-                                <!-- Primary Result -->
-                                <div class="primary-result">
-                                    <div class="result-header">
-                                        <div
-                                            class="result-icon"
-                                            id="resultIcon"
-                                        >
-                                            🎯
-                                        </div>
-                                        <div class="result-main">
-                                            <div
-                                                class="result-class"
-                                                id="resultClass"
-                                            >
-                                                No analysis yet
-                                            </div>
-                                            <div
-                                                class="result-confidence"
-                                                id="resultConfidence"
-                                            >
-                                                Upload an image to begin
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Probability Chart -->
-                                <div class="chart-container">
-                                    <div class="chart-header">
-                                        <h3 class="chart-title">
-                                            Class Probabilities
-                                        </h3>
-                                    </div>
-                                    <div class="chart-content">
-                                        <canvas
-                                            id="probabilityChart"
-                                            width="400"
-                                            height="300"
-                                        ></canvas>
-                                    </div>
-                                </div>
-
-                                <!-- Detailed Probabilities -->
-                                <div class="probability-details">
-                                    <h3 class="details-title">
-                                        Detailed Results
-                                    </h3>
-                                    <div
-                                        class="probability-bars"
-                                        id="probabilityBars"
-                                    >
-                                        <!-- Probability bars will be inserted here -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Empty State -->
-                            <div class="empty-state" id="emptyState">
-                                <div class="empty-icon">📊</div>
-                                <div class="empty-title">No Analysis Yet</div>
-                                <div class="empty-subtitle">
-                                    Upload a CT scan image to see prediction
-                                    results
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </main>
-
-            <!-- Footer -->
-            <footer class="footer">
-                <div class="footer-content">
-                    <div class="footer-info">
-                        <span
-                            >Powered by EfficientNet • For research purposes
-                            only</span
-                        >
-                    </div>
-                    <div class="footer-actions">
-                        <button class="btn-text" id="aboutBtn">About</button>
-                        <button class="btn-text" id="helpBtn">Help</button>
-                    </div>
-                </div>
-            </footer>
-        </div>
-
-        <!-- Modal for About/Help -->
-        <div class="modal" id="modal" style="display: none">
-            <div class="modal-backdrop" id="modalBackdrop"></div>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalTitle">About</h3>
-                    <button class="modal-close" id="modalClose">×</button>
-                </div>
-                <div class="modal-body" id="modalBody">
-                    <!-- Modal content will be inserted here -->
-                </div>
-            </div>
-        </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script type="module">
-            import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
-            window.GradioClient = Client;
+        <script>
+            // Redirect after a short delay
+            setTimeout(function () {
+                window.location.href = "classification/index.html";
+            }, 1500);
         </script>
-        <script src="drawer-navigation.js"></script>
-        <script src="script.js"></script>
     </body>
 </html>

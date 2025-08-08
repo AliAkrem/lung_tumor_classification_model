@@ -21,20 +21,24 @@ class DrawerNavigation {
     const isInAugDir =
       currentPath.includes("/aug/") || window.location.href.includes("/aug/");
 
-    if (isInAugDir) {
-      // We're in aug/ directory, need to go back
-      if (path === "index.html") {
-        return "../index.html";
-      } else if (path === "aug/index.html") {
+    // Check which directory we're in
+    if (currentPath.includes("/augmentation/")) {
+      // We're in augmentation directory
+      if (path === "classification/index.html") {
+        return "../classification/index.html";
+      } else if (path === "augmentation/index.html") {
         return "index.html";
+      }
+    } else if (currentPath.includes("/classification/")) {
+      // We're in classification directory
+      if (path === "classification/index.html") {
+        return "index.html";
+      } else if (path === "augmentation/index.html") {
+        return "../augmentation/index.html";
       }
     } else {
       // We're in root directory
-      if (path === "index.html") {
-        return "index.html";
-      } else if (path === "aug/index.html") {
-        return "aug/index.html";
-      }
+      return path;
     }
     return path;
   }
@@ -71,7 +75,7 @@ class DrawerNavigation {
           <h3 class="drawer-nav-title">AI Tools</h3>
           <ul class="drawer-nav-list">
             <li class="drawer-nav-item">
-              <a href="#" class="drawer-nav-link" data-page="classification" data-target="index.html">
+              <a href="#" class="drawer-nav-link" data-page="classification" data-target="classification/index.html">
                 <div class="drawer-nav-icon">🫁</div>
                 <div class="drawer-nav-content">
                   <div class="drawer-nav-label">Tumor Classification</div>
@@ -81,7 +85,7 @@ class DrawerNavigation {
               </a>
             </li>
             <li class="drawer-nav-item">
-              <a href="#" class="drawer-nav-link" data-page="augmentation" data-target="aug/index.html">
+              <a href="#" class="drawer-nav-link" data-page="augmentation" data-target="augmentation/index.html">
                 <div class="drawer-nav-icon">🔄</div>
                 <div class="drawer-nav-content">
                   <div class="drawer-nav-label">Image Augmentation</div>
@@ -282,21 +286,20 @@ class DrawerNavigation {
     // Check for classification page
     if (page === "classification") {
       return (
+        currentPath.includes("/classification/") ||
         currentPath === "" ||
         currentPath === "index" ||
-        currentPath.endsWith("index.html") ||
-        currentPath.endsWith("/") ||
-        (!currentPath.includes("aug") &&
-          !window.location.href.includes("/aug/"))
+        (currentPath.endsWith("index.html") &&
+          !currentPath.includes("/augmentation/")) ||
+        (currentPath.endsWith("/") && !currentPath.includes("/augmentation/"))
       );
     }
 
     // Check for augmentation page
     if (page === "augmentation") {
       return (
-        currentPath.includes("aug") ||
-        currentPath.includes("augmentation") ||
-        window.location.href.includes("/aug/")
+        currentPath.includes("/augmentation/") ||
+        window.location.href.includes("/augmentation/")
       );
     }
 
