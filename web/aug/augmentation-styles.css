@@ -1,0 +1,406 @@
+/* Augmentation-specific styles extending the base Zed design system */
+
+/* Content Layout */
+.content-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .content-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+}
+
+/* Upload Section - Fixed Width */
+.upload-section {
+  position: sticky;
+  top: calc(var(--space-8) + 80px); /* Header height offset */
+}
+
+/* Results Panel Adjustments */
+.results-panel {
+  min-height: 600px;
+}
+
+/* Augmentation Grid */
+.augmentation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+@media (max-width: 768px) {
+  .augmentation-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}
+
+/* Augmentation Items */
+.augmentation-item {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.augmentation-item:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Augmentation Headers */
+.augmentation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--bg-hover);
+}
+
+.augmentation-title {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Download Button */
+.download-btn {
+  background: none;
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--space-2);
+  transition: all var(--transition-fast);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-btn:hover {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--text-inverse);
+  transform: scale(1.05);
+}
+
+.download-btn:active {
+  transform: scale(0.95);
+}
+
+/* Image Containers */
+.augmentation-image-container {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  position: relative;
+}
+
+.augmentation-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.augmentation-item:hover .augmentation-image-container img {
+  transform: scale(1.02);
+}
+
+/* Loading Overlay for Images */
+.augmentation-image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 1s ease-in-out;
+  z-index: 1;
+}
+
+.augmentation-image-container.loading::before {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Image Loading States */
+.augmentation-image-container img[src=""] {
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-hover) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.augmentation-image-container img[src=""]::after {
+  content: '🖼️';
+  font-size: var(--font-3xl);
+  color: var(--text-muted);
+}
+
+/* Download All Container */
+.download-all-container {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--bg-tertiary);
+}
+
+/* Status Updates */
+.status-indicator.processing .status-dot {
+  background-color: var(--accent-warning);
+  animation: pulse 1s infinite;
+}
+
+.status-indicator.success .status-dot {
+  background-color: var(--accent-success);
+}
+
+.status-indicator.error .status-dot {
+  background-color: var(--accent-error);
+}
+
+/* Enhanced Loading State */
+.loading-state {
+  padding: var(--space-12);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.loading-progress {
+  width: 200px;
+  height: 4px;
+  background-color: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-4);
+}
+
+.loading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 2px;
+  transform: translateX(-100%);
+  animation: progress 2s ease-in-out infinite;
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .upload-section {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .augmentation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .augmentation-item {
+    margin-bottom: var(--space-4);
+  }
+
+  .content-layout {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* Error States */
+.augmentation-item.error {
+  border-color: var(--accent-error);
+}
+
+.augmentation-item.error .augmentation-image-container {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.augmentation-item.error .augmentation-image-container::after {
+  content: '❌';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--font-2xl);
+  z-index: 2;
+}
+
+/* Success Animation */
+.augmentation-item.loaded {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tooltip for Download Buttons */
+.download-btn {
+  position: relative;
+}
+
+.download-btn::after {
+  content: 'Download';
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-xs);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+  z-index: 100;
+  border: 1px solid var(--bg-hover);
+}
+
+.download-btn:hover::after {
+  opacity: 1;
+}
+
+/* Original Image Highlight */
+.augmentation-item:first-child {
+  border-color: var(--accent-success);
+}
+
+.augmentation-item:first-child .augmentation-header {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.augmentation-item:first-child .augmentation-title {
+  color: var(--accent-success);
+}
+
+/* Fullscreen Modal for Images */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.image-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.image-modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  position: relative;
+}
+
+.image-modal-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+}
+
+.image-modal-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: var(--font-2xl);
+  cursor: pointer;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.image-modal-close:hover {
+  background-color: var(--accent-error);
+}
+
+/* Click to expand hint */
+.augmentation-image-container {
+  cursor: pointer;
+  position: relative;
+}
+
+.augmentation-image-container::after {
+  content: '🔍';
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-sm);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.augmentation-item:hover .augmentation-image-container::after {
+  opacity: 1;
+}

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Image Augmentation - AI Diagnostics</title>
+        <link rel="stylesheet" href="../styles.css" />
+        <link rel="stylesheet" href="../drawer-navigation.css" />
+        <link rel="stylesheet" href="augmentation-styles.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="app-container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon">🖼️</div>
+                        <h1 class="app-title">Image Augmentation</h1>
+                    </div>
+                    <div class="header-info">
+                        <span class="model-info">
+                            8 Augmentation Types • Real-time Processing
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="content-layout">
+                    <!-- Upload Section -->
+                    <section class="upload-section">
+                        <div class="panel upload-panel">
+                            <div class="panel-header">
+                                <h2 class="panel-title">Upload Image</h2>
+                                <div class="panel-subtitle">
+                                    Supported formats: PNG, JPG, JPEG
+                                </div>
+                            </div>
+
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-content">
+                                    <div class="upload-icon">📁</div>
+                                    <div class="upload-text">
+                                        <div class="upload-primary">
+                                            Drop your image here
+                                        </div>
+                                        <div class="upload-secondary">
+                                            or click to browse files
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        id="imageInput"
+                                        accept="image/*"
+                                        class="file-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Image Preview -->
+                            <div
+                                class="image-preview"
+                                id="imagePreview"
+                                style="display: none"
+                            >
+                                <div class="preview-header">
+                                    <span class="preview-title">
+                                        Selected Image
+                                    </span>
+                                    <button
+                                        class="btn-secondary btn-small"
+                                        id="clearImage"
+                                    >
+                                        Clear
+                                    </button>
+                                </div>
+                                <div class="preview-container">
+                                    <img id="previewImg" alt="Selected image" />
+                                </div>
+                                <div class="image-info" id="imageInfo"></div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button
+                                    class="btn-primary"
+                                    id="augmentBtn"
+                                    disabled
+                                >
+                                    <span class="btn-icon">🔄</span>
+                                    Generate Augmentations
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Results Section -->
+                    <section class="results-section">
+                        <div class="panel results-panel">
+                            <div class="panel-header">
+                                <h2 class="panel-title">
+                                    Augmentation Results
+                                </h2>
+                                <div
+                                    class="status-indicator"
+                                    id="statusIndicator"
+                                >
+                                    <div class="status-dot"></div>
+                                    <span class="status-text">Ready</span>
+                                </div>
+                            </div>
+
+                            <!-- Loading State -->
+                            <div
+                                class="loading-state"
+                                id="loadingState"
+                                style="display: none"
+                            >
+                                <div class="loading-spinner"></div>
+                                <div class="loading-text">
+                                    Generating augmentations...
+                                </div>
+                            </div>
+
+                            <!-- Results Content -->
+                            <div
+                                class="results-content"
+                                id="resultsContent"
+                                style="display: none"
+                            >
+                                <!-- Augmentation Grid -->
+                                <div
+                                    class="augmentation-grid"
+                                    id="augmentationGrid"
+                                >
+                                    <!-- Original Image -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Original
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="original"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="originalImage"
+                                                alt="Original image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Rotation -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Random Rotation
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="rotation"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="rotationImage"
+                                                alt="Rotated image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Width Shift -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Width Shift
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="width-shift"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="widthShiftImage"
+                                                alt="Width shifted image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Height Shift -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Height Shift
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="height-shift"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="heightShiftImage"
+                                                alt="Height shifted image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Shear -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Shear
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="shear"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="shearImage"
+                                                alt="Sheared image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Zoom -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Zoom
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="zoom"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="zoomImage"
+                                                alt="Zoomed image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Brightness -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Brightness
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="brightness"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="brightnessImage"
+                                                alt="Brightness adjusted image"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <!-- Channel Shift -->
+                                    <div class="augmentation-item">
+                                        <div class="augmentation-header">
+                                            <h3 class="augmentation-title">
+                                                Channel Shift
+                                            </h3>
+                                            <button
+                                                class="download-btn"
+                                                data-type="channel-shift"
+                                            >
+                                                <span>⬇</span>
+                                            </button>
+                                        </div>
+                                        <div
+                                            class="augmentation-image-container"
+                                        >
+                                            <img
+                                                id="channelShiftImage"
+                                                alt="Channel shifted image"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Download All Button -->
+                                <div class="download-all-container">
+                                    <button
+                                        class="btn-primary"
+                                        id="downloadAllBtn"
+                                    >
+                                        <span class="btn-icon">📦</span>
+                                        Download All Images
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div class="empty-state" id="emptyState">
+                                <div class="empty-icon">🎨</div>
+                                <div class="empty-title">
+                                    No Augmentations Yet
+                                </div>
+                                <div class="empty-subtitle">
+                                    Upload an image to see augmentation results
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <span>
+                            Powered by Gradio API • 8 Augmentation Types
+                        </span>
+                    </div>
+                    <div class="footer-actions">
+                        <button class="btn-text" id="aboutBtn">About</button>
+                        <button class="btn-text" id="helpBtn">Help</button>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Modal for About/Help -->
+        <div class="modal" id="modal" style="display: none">
+            <div class="modal-backdrop" id="modalBackdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">About</h3>
+                    <button class="modal-close" id="modalClose">×</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Modal content will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <script type="module">
+            import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+            window.GradioClient = Client;
+        </script>
+        <script src="../drawer-navigation.js"></script>
+        <script src="augmentation-script.js"></script>
+    </body>
+</html>
