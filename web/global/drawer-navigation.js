@@ -16,30 +16,95 @@ class DrawerNavigation {
   }
 
   getCorrectPath(path) {
-    // Determine if we're in a subdirectory
-    const currentPath = window.location.pathname;
-    const isInAugDir =
-      currentPath.includes("/aug/") || window.location.href.includes("/aug/");
+    // Get base URL to handle both relative and absolute paths
+    const getBaseUrl = () => {
+      const pathSegments = window.location.pathname.split("/");
+      // Remove the last part (file name or empty string after trailing slash)
+      pathSegments.pop();
 
-    // Check which directory we're in
-    if (currentPath.includes("/augmentation/")) {
-      // We're in augmentation directory
-      if (path === "classification/index.html") {
-        return "../classification/index.html";
-      } else if (path === "augmentation/index.html") {
-        return "index.html";
+      // Check if we're in a subdirectory like /classification/, /augmentation/, or /segmentation/
+      if (
+        pathSegments.length > 0 &&
+        (pathSegments[pathSegments.length - 1] === "classification" ||
+          pathSegments[pathSegments.length - 1] === "augmentation" ||
+          pathSegments[pathSegments.length - 1] === "segmentation")
+      ) {
+        // We're in a subdirectory, go one level up
+        return "../";
       }
-    } else if (currentPath.includes("/classification/")) {
-      // We're in classification directory
-      if (path === "classification/index.html") {
-        return "index.html";
-      } else if (path === "augmentation/index.html") {
-        return "../augmentation/index.html";
-      }
-    } else {
-      // We're in root directory
-      return path;
+
+      // We're at root level
+      return "./";
+    };
+
+    // Get current location info
+    const currentPath = window.location.pathname;
+    const currentUrl = window.location.href;
+    const baseUrl = getBaseUrl();
+
+    // For absolute navigation, remove directory structure from target paths
+    const cleanPath = (p) => {
+      if (p.startsWith("classification/")) return "classification/index.html";
+      if (p.startsWith("augmentation/")) return "augmentation/index.html";
+      if (p.startsWith("segmentation/")) return "segmentation/index.html";
+      return p;
+    };
+
+    // Identify current section
+    const isInAugDir =
+      currentPath.includes("/augmentation/") ||
+      currentUrl.includes("/augmentation/");
+    const isInSegDir =
+      currentPath.includes("/segmentation/") ||
+      currentUrl.includes("/segmentation/");
+    const isInClassDir =
+      currentPath.includes("/classification/") ||
+      currentUrl.includes("/classification/");
+
+    // Map of target paths to their correct relative URLs from each section
+    const pathMap = {
+      "classification/index.html": {
+        inRoot: "classification/index.html",
+        inClassDir: "index.html",
+        inAugDir: "../classification/index.html",
+        inSegDir: "../classification/index.html",
+      },
+      "augmentation/index.html": {
+        inRoot: "augmentation/index.html",
+        inClassDir: "../augmentation/index.html",
+        inAugDir: "index.html",
+        inSegDir: "../augmentation/index.html",
+      },
+      "segmentation/index.html": {
+        inRoot: "segmentation/index.html",
+        inClassDir: "../segmentation/index.html",
+        inAugDir: "../segmentation/index.html",
+        inSegDir: "index.html",
+      },
+    };
+
+    // Clean the path first
+    const cleanedPath = cleanPath(path);
+
+    // If the path exists in our map, return the appropriate relative URL
+    if (pathMap[cleanedPath]) {
+      if (isInClassDir) return pathMap[cleanedPath].inClassDir;
+      if (isInAugDir) return pathMap[cleanedPath].inAugDir;
+      if (isInSegDir) return pathMap[cleanedPath].inSegDir;
+      return pathMap[cleanedPath].inRoot;
     }
+
+    // Fallback handling - use absolute paths with base URL
+    console.log("Using fallback path handling for:", path);
+    if (
+      path.startsWith("classification/") ||
+      path.startsWith("augmentation/") ||
+      path.startsWith("segmentation/")
+    ) {
+      return baseUrl + path;
+    }
+
+    // If we got here, just return the original path
     return path;
   }
 
@@ -80,6 +145,17 @@ class DrawerNavigation {
                 <div class="drawer-nav-content">
                   <div class="drawer-nav-label">Tumor Classification</div>
                   <div class="drawer-nav-description">Analyze CT scans for lung tumors</div>
+                </div>
+                <div class="drawer-nav-status">Active</div>
+              </a>
+            </li>
+
+            <li class="drawer-nav-item">
+              <a href="#" class="drawer-nav-link" data-page="segmentation" data-target="segmentation/index.html">
+                <div class="drawer-nav-icon">✂️</div>
+                <div class="drawer-nav-content">
+                  <div class="drawer-nav-label">Lung Segmentation</div>
+                  <div class="drawer-nav-description">Segment lung regions in CT scans</div>
                 </div>
                 <div class="drawer-nav-status">Active</div>
               </a>
@@ -148,6 +224,11 @@ class DrawerNavigation {
       if (target) {
         const correctPath = this.getCorrectPath(target);
         link.setAttribute("href", correctPath);
+
+        // Store the original target for potential re-calculation
+        if (!link.hasAttribute("data-original-target")) {
+          link.setAttribute("data-original-target", target);
+        }
       }
     });
   }
@@ -165,6 +246,12 @@ class DrawerNavigation {
 
     // Navigation link events
     this.navLinks.forEach((link) => {
+      // Store original href for navigation
+      const originalHref = link.getAttribute("href");
+      if (originalHref && !link.hasAttribute("data-original-href")) {
+        link.setAttribute("data-original-href", originalHref);
+      }
+
       link.addEventListener("click", (e) => {
         // Handle internal links
         if (link.id === "drawer-about" || link.id === "drawer-help") {
@@ -172,8 +259,37 @@ class DrawerNavigation {
           this.handleModalLink(link.id);
           this.close();
         } else {
+          // Always recalculate the path before navigation
+          const target =
+            link.getAttribute("data-original-target") ||
+            link.getAttribute("data-target");
+
+          if (target) {
+            try {
+              const correctPath = this.getCorrectPath(target);
+              console.log(`Navigation: ${target} → ${correctPath}`);
+
+              // Update the href attribute
+              link.setAttribute("href", correctPath);
+
+              // For debugging purposes, log the navigation
+              console.log("Navigating to:", {
+                target,
+                correctPath,
+                currentLocation: window.location.href,
+              });
+            } catch (err) {
+              console.error("Navigation path error:", err);
+              // Use fallback navigation if path calculation fails
+              const fallbackPath = `../${target}`;
+              link.setAttribute("href", fallbackPath);
+              console.log(`Using fallback navigation: ${fallbackPath}`);
+            }
+          }
+
           // Add loading state for page navigation
           this.addLoadingState(link);
+
           // Let the browser handle the navigation
           setTimeout(() => this.close(), 100);
         }
@@ -286,20 +402,32 @@ class DrawerNavigation {
     // Check for classification page
     if (page === "classification") {
       return (
-        currentPath.includes("/classification/") ||
         currentPath === "" ||
         currentPath === "index" ||
-        (currentPath.endsWith("index.html") &&
-          !currentPath.includes("/augmentation/")) ||
-        (currentPath.endsWith("/") && !currentPath.includes("/augmentation/"))
+        currentPath.endsWith("index.html") ||
+        currentPath.endsWith("/") ||
+        currentPath.includes("/classification/") ||
+        window.location.href.includes("/classification/")
       );
     }
 
     // Check for augmentation page
     if (page === "augmentation") {
       return (
-        currentPath.includes("/augmentation/") ||
+        currentPath.includes("aug") ||
+        currentPath.includes("augmentation") ||
+        window.location.href.includes("/aug/") ||
         window.location.href.includes("/augmentation/")
+      );
+    }
+
+    // Check for segmentation page
+    if (page === "segmentation") {
+      return (
+        currentPath.includes("seg") ||
+        currentPath.includes("segmentation") ||
+        window.location.href.includes("/seg/") ||
+        window.location.href.includes("/segmentation/")
       );
     }
 
@@ -404,7 +532,37 @@ class DrawerNavigation {
   // Public methods
   refresh() {
     this.currentPath = window.location.pathname;
-    this.setActiveState();
+    console.log("Navigation refresh - current path:", this.currentPath);
+
+    try {
+      // Update navigation links before setting active state
+      this.fixNavigationLinks();
+
+      // Set active state based on current path
+      this.setActiveState();
+
+      // Log active navigation item
+      const activeItem = this.getActiveItem();
+      if (activeItem) {
+        console.log(
+          "Active navigation item:",
+          activeItem.querySelector(".drawer-nav-label")?.textContent ||
+            "Unknown",
+        );
+      }
+    } catch (err) {
+      console.error("Error refreshing navigation:", err);
+
+      // Emergency fix - set all navigation links with absolute paths
+      this.navLinks.forEach((link) => {
+        const target = link.getAttribute("data-target");
+        if (target) {
+          // Create absolute path from root
+          const absolutePath = target.includes("/") ? target : `/${target}`;
+          link.setAttribute("href", absolutePath);
+        }
+      });
+    }
   }
 
   getActiveItem() {
@@ -427,12 +585,43 @@ class DrawerNavigation {
 
 // Initialize drawer navigation when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const drawerNav = new DrawerNavigation();
+  try {
+    const drawerNav = new DrawerNavigation();
 
-  // Make drawer navigation globally available
-  window.drawerNavigation = drawerNav;
+    // Make drawer navigation globally available
+    window.drawerNavigation = drawerNav;
 
-  console.log("Drawer navigation initialized");
+    console.log("Drawer navigation initialized");
+
+    // Fix navigation links whenever the page loads
+    drawerNav.refresh();
+
+    // Add event listener for page loads
+    window.addEventListener("load", () => {
+      console.log("Page fully loaded - refreshing navigation");
+      drawerNav.refresh();
+    });
+
+    // Add safety fallback for broken navigation
+    window.addEventListener("error", (e) => {
+      if (e.message && e.message.includes("navigation")) {
+        console.warn("Navigation error detected, applying emergency fixes");
+        // Force reset all navigation links to absolute paths
+        document
+          .querySelectorAll(".drawer-nav-link[data-target]")
+          .forEach((link) => {
+            const target = link.getAttribute("data-target");
+            if (target) {
+              // Build path starting from web directory
+              link.setAttribute("href", `../web/${target}`);
+            }
+          });
+      }
+    });
+  } catch (err) {
+    console.error("Failed to initialize drawer navigation:", err);
+    // Don't let navigation failure break the entire page
+  }
 });
 
 // Handle page visibility changes

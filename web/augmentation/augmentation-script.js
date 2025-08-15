@@ -313,7 +313,7 @@ class ImageAugmentationApp {
 
     downloadButtons.forEach((btn, index) => {
       btn.addEventListener("click", (e) => {
-        e.stopPropagation();
+        e.stopbigation();
         if (this.augmentationResults && this.augmentationResults[index]) {
           this.downloadImage(this.augmentationResults[index], btn.dataset.type);
         }

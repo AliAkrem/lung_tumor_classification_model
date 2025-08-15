@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Image Augmentation - AI Diagnostics</title>
+        <title>Lung Segmentation - AI Diagnostics</title>
         <link rel="stylesheet" href="../global/styles.css" />
         <link rel="stylesheet" href="../global/drawer-navigation.css" />
-        <link rel="stylesheet" href="augmentation-styles.css" />
+        <link rel="stylesheet" href="segmentation-styles.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -20,12 +20,12 @@
             <header class="header">
                 <div class="header-content">
                     <div class="logo">
-                        <div class="logo-icon">🖼️</div>
-                        <h1 class="app-title">Image Augmentation</h1>
+                        <div class="logo-icon">🫁</div>
+                        <h1 class="app-title">Lung Segmentation</h1>
                     </div>
                     <div class="header-info">
                         <span class="model-info">
-                            8 Augmentation Types • Real-time Processing
+                            4 Segments • Advanced Visualization
                         </span>
                         <!-- Emergency Navigation Links -->
                         <div
@@ -38,9 +38,9 @@
                                 >Classification</a
                             >
                             <a
-                                href="../segmentation/index.html"
+                                href="../augmentation/index.html"
                                 style="color: #cccccc"
-                                >Segmentation</a
+                                >Augmentation</a
                             >
                         </div>
                     </div>
@@ -54,30 +54,49 @@
                     <section class="upload-section">
                         <div class="panel upload-panel">
                             <div class="panel-header">
-                                <h2 class="panel-title">Upload Image</h2>
+                                <h2 class="panel-title">Upload CT Scan</h2>
                                 <div class="panel-subtitle">
                                     Supported formats: PNG, JPG, JPEG
                                 </div>
                             </div>
 
-                            <div class="upload-area" id="uploadArea">
+                            <div
+                                class="upload-area"
+                                id="uploadArea"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Upload image area. Drop file here or click to browse"
+                                onclick="document.getElementById('imageInput').click()"
+                            >
                                 <div class="upload-content">
-                                    <div class="upload-icon">📁</div>
+                                    <div class="upload-icon" aria-hidden="true">
+                                        📁
+                                    </div>
                                     <div class="upload-text">
                                         <div class="upload-primary">
-                                            Drop your image here
+                                            Drop your CT scan image here
                                         </div>
                                         <div class="upload-secondary">
-                                            or click to browse files
+                                            or
+                                            <button
+                                                class="browse-text"
+                                                type="button"
+                                                id="browseButton"
+                                                onclick="document.getElementById('imageInput').click(); event.stopPropagation();"
+                                            >
+                                                browse files
+                                            </button>
                                         </div>
                                     </div>
-                                    <input
-                                        type="file"
-                                        id="imageInput"
-                                        accept="image/*"
-                                        class="file-input"
-                                    />
                                 </div>
+                                <input
+                                    type="file"
+                                    id="imageInput"
+                                    accept="image/*"
+                                    class="file-input"
+                                    aria-label="Choose image file"
+                                    onchange="if(this.files.length) document.getElementById('previewImg').src = window.URL.createObjectURL(this.files[0])"
+                                />
                             </div>
 
                             <!-- Image Preview -->
@@ -98,7 +117,10 @@
                                     </button>
                                 </div>
                                 <div class="preview-container">
-                                    <img id="previewImg" alt="Selected image" />
+                                    <img
+                                        id="previewImg"
+                                        alt="Selected CT scan preview"
+                                    />
                                 </div>
                                 <div class="image-info" id="imageInfo"></div>
                             </div>
@@ -107,11 +129,14 @@
                             <div class="action-buttons">
                                 <button
                                     class="btn-primary"
-                                    id="augmentBtn"
+                                    id="segmentBtn"
                                     disabled
+                                    aria-label="Segment uploaded image"
                                 >
-                                    <span class="btn-icon">🔄</span>
-                                    Generate Augmentations
+                                    <span class="btn-icon" aria-hidden="true"
+                                        >✂️</span
+                                    >
+                                    Segment Image
                                 </button>
                             </div>
                         </div>
@@ -122,7 +147,7 @@
                         <div class="panel results-panel">
                             <div class="panel-header">
                                 <h2 class="panel-title">
-                                    Augmentation Results
+                                    Segmentation Results
                                 </h2>
                                 <div
                                     class="status-indicator"
@@ -141,7 +166,7 @@
                             >
                                 <div class="loading-spinner"></div>
                                 <div class="loading-text">
-                                    Generating augmentations...
+                                    Processing your CT scan...
                                 </div>
                             </div>
 
@@ -151,16 +176,16 @@
                                 id="resultsContent"
                                 style="display: none"
                             >
-                                <!-- Augmentation Grid -->
+                                <!-- Segmentation Grid -->
                                 <div
-                                    class="augmentation-grid"
-                                    id="augmentationGrid"
+                                    class="segmentation-grid"
+                                    id="segmentationGrid"
                                 >
                                     <!-- Original Image -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Original
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                Original Image
                                             </h3>
                                             <button
                                                 class="download-btn"
@@ -169,173 +194,115 @@
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
                                                 id="originalImage"
-                                                alt="Original image"
+                                                alt="Original CT scan"
                                             />
                                         </div>
                                     </div>
 
-                                    <!-- Rotation -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Random Rotation
+                                    <!-- Combined Segments -->
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                All Segments Combined
                                             </h3>
                                             <button
                                                 class="download-btn"
-                                                data-type="rotation"
+                                                data-type="combined"
                                             >
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
-                                                id="rotationImage"
-                                                alt="Rotated image"
+                                                id="combinedImage"
+                                                alt="All segments combined"
                                             />
                                         </div>
                                     </div>
 
-                                    <!-- Width Shift -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Width Shift
+                                    <!-- Left Lung -->
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                Left Lung
                                             </h3>
                                             <button
                                                 class="download-btn"
-                                                data-type="width-shift"
+                                                data-type="left-lung"
                                             >
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
-                                                id="widthShiftImage"
-                                                alt="Width shifted image"
+                                                id="leftLungImage"
+                                                alt="Left lung segment"
                                             />
                                         </div>
                                     </div>
 
-                                    <!-- Height Shift -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Height Shift
+                                    <!-- Dark Regions -->
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                Dark Regions
                                             </h3>
                                             <button
                                                 class="download-btn"
-                                                data-type="height-shift"
+                                                data-type="dark-regions"
                                             >
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
-                                                id="heightShiftImage"
-                                                alt="Height shifted image"
+                                                id="darkRegionsImage"
+                                                alt="Dark regions segment"
                                             />
                                         </div>
                                     </div>
 
-                                    <!-- Shear -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Shear
+                                    <!-- Mediastinum -->
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                Mediastinum
                                             </h3>
                                             <button
                                                 class="download-btn"
-                                                data-type="shear"
+                                                data-type="mediastinum"
                                             >
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
-                                                id="shearImage"
-                                                alt="Sheared image"
+                                                id="mediastinumImage"
+                                                alt="Mediastinum segment"
                                             />
                                         </div>
                                     </div>
 
-                                    <!-- Zoom -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Zoom
+                                    <!-- Right Lung -->
+                                    <div class="segment-item">
+                                        <div class="segment-header">
+                                            <h3 class="segment-title">
+                                                Right Lung
                                             </h3>
                                             <button
                                                 class="download-btn"
-                                                data-type="zoom"
+                                                data-type="right-lung"
                                             >
                                                 <span>⬇</span>
                                             </button>
                                         </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
+                                        <div class="segment-image-container">
                                             <img
-                                                id="zoomImage"
-                                                alt="Zoomed image"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- Brightness -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Brightness
-                                            </h3>
-                                            <button
-                                                class="download-btn"
-                                                data-type="brightness"
-                                            >
-                                                <span>⬇</span>
-                                            </button>
-                                        </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
-                                            <img
-                                                id="brightnessImage"
-                                                alt="Brightness adjusted image"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- Channel Shift -->
-                                    <div class="augmentation-item">
-                                        <div class="augmentation-header">
-                                            <h3 class="augmentation-title">
-                                                Channel Shift
-                                            </h3>
-                                            <button
-                                                class="download-btn"
-                                                data-type="channel-shift"
-                                            >
-                                                <span>⬇</span>
-                                            </button>
-                                        </div>
-                                        <div
-                                            class="augmentation-image-container"
-                                        >
-                                            <img
-                                                id="channelShiftImage"
-                                                alt="Channel shifted image"
+                                                id="rightLungImage"
+                                                alt="Right lung segment"
                                             />
                                         </div>
                                     </div>
@@ -348,19 +315,32 @@
                                         id="downloadAllBtn"
                                     >
                                         <span class="btn-icon">📦</span>
-                                        Download All Images
+                                        Download All Segments
                                     </button>
                                 </div>
                             </div>
 
                             <!-- Empty State -->
                             <div class="empty-state" id="emptyState">
-                                <div class="empty-icon">🎨</div>
+                                <div class="empty-icon">✂️</div>
                                 <div class="empty-title">
-                                    No Augmentations Yet
+                                    No Segmentation Yet
                                 </div>
                                 <div class="empty-subtitle">
-                                    Upload an image to see augmentation results
+                                    Upload a CT scan image to see segmentation
+                                    results
+                                </div>
+                            </div>
+
+                            <!-- Error Container -->
+                            <div class="error-container" style="display: none">
+                                <div class="panel-header">
+                                    <h3 class="panel-title">
+                                        Error Information
+                                    </h3>
+                                </div>
+                                <div class="error-content">
+                                    <!-- Error messages will be displayed here -->
                                 </div>
                             </div>
                         </div>
@@ -372,9 +352,7 @@
             <footer class="footer">
                 <div class="footer-content">
                     <div class="footer-info">
-                        <span>
-                            Powered by Gradio API • 8 Augmentation Types
-                        </span>
+                        <span> For research purposes only </span>
                     </div>
                     <div class="footer-actions">
                         <button class="btn-text" id="aboutBtn">About</button>
@@ -398,12 +376,23 @@
             </div>
         </div>
 
+        <!-- Image Modal for Fullscreen View -->
+        <div class="image-modal" id="imageModal" style="display: none">
+            <div class="image-modal-content">
+                <button class="image-modal-close" id="imageModalClose">
+                    ×
+                </button>
+                <img id="imageModalImg" src="" alt="" />
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script type="module">
             import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
             window.GradioClient = Client;
         </script>
         <script src="../global/drawer-navigation.js"></script>
-        <script src="augmentation-script.js"></script>
+        <script src="segmentation-script.js"></script>
 
         <!-- Fallback navigation in case drawer navigation fails -->
         <script>
@@ -425,7 +414,7 @@
                             fallbackNav.innerHTML = `
                                 <div style="margin-left: 15px; display: flex; gap: 15px;">
                                     <a href="../classification/index.html" style="color: #cccccc; text-decoration: underline;">Classification</a>
-                                    <a href="../segmentation/index.html" style="color: #cccccc; text-decoration: underline;">Segmentation</a>
+                                    <a href="../augmentation/index.html" style="color: #cccccc; text-decoration: underline;">Augmentation</a>
                                 </div>
                             `;
                             header.appendChild(fallbackNav);

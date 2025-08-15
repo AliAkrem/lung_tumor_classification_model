@@ -22,6 +22,11 @@ lung_tumor_prediction/web/
 │   ├── augmentation-script.js # Augmentation functionality
 │   └── augmentation-styles.css # Augmentation-specific styles
 │
+├── segmentation/             # Lung segmentation tool
+│   ├── index.html            # Segmentation page
+│   ├── segmentation-script.js # Segmentation functionality
+│   └── segmentation-styles.css # Segmentation-specific styles
+│
 ├── utils/                    # Utility files and tools
 │   └── test-api.html         # API testing utility
 │
@@ -41,6 +46,11 @@ lung_tumor_prediction/web/
    - Generate 8 different augmented versions of an image
    - View all augmentations in a grid layout
    - Download individual or all augmented images
+
+3. **Lung Segmentation** (`/segmentation/index.html`)
+   - Upload CT scan images for lung region segmentation
+   - View segmented regions (left lung, right lung, mediastinum, dark regions)
+   - Download individual segments or all at once
 
 ## Navigation
 
@@ -69,4 +79,6 @@ To run the application locally:
 - **classification/script.js**: Handles tumor classification logic and API integration
 - **augmentation/augmentation-script.js**: Handles image augmentation logic and API integration
 - **augmentation/augmentation-styles.css**: Specific styles for the augmentation grid
+- **segmentation/segmentation-script.js**: Handles lung segmentation logic and API integration
+- **segmentation/segmentation-styles.css**: Specific styles for the segmentation grid
 - **utils/test-api.html**: Utility for testing API connections and responses

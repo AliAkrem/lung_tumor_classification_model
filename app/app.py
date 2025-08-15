@@ -79,7 +79,7 @@ class TumorPredictor:
                     'error': 'Model not loaded. Please ensure the model file is uploaded.',
                     'class': 'unknown',
                     'confidence': 0.0,
-                    'probabilities': {class_name: 0.0 for class_name in self.class_names}
+                    'aabilities': {class_name: 0.0 for class_name in self.class_names}
                 }
 
             # Preprocess the image

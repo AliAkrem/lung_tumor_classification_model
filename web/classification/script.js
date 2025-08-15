@@ -644,7 +644,7 @@ style.textContent = `
 
   .probability-value {
     font-weight: 600;
-    color: #333;
+    color: #fff;
   }
 
   .probability-bar {

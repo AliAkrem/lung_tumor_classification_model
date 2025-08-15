@@ -26,6 +26,22 @@
                         <span class="model-info"
                             >EfficientNet • 4 Classes • 99.2% Accuracy</span
                         >
+                        <!-- Emergency Navigation Links -->
+                        <div
+                            class="emergency-nav"
+                            style="margin-left: 20px; font-size: 14px"
+                        >
+                            <a
+                                href="../augmentation/index.html"
+                                style="color: #cccccc; margin-right: 10px"
+                                >Augmentation</a
+                            >
+                            <a
+                                href="../segmentation/index.html"
+                                style="color: #cccccc"
+                                >Segmentation</a
+                            >
+                        </div>
                     </div>
                 </div>
             </header>
@@ -243,5 +259,35 @@
         </script>
         <script src="../global/drawer-navigation.js"></script>
         <script src="script.js"></script>
+
+        <!-- Fallback navigation in case drawer navigation fails -->
+        <script>
+            // Wait for DOM to be fully loaded
+            document.addEventListener("DOMContentLoaded", function () {
+                // Check if drawer navigation initialized correctly after a delay
+                setTimeout(function () {
+                    const drawerNav = document.querySelector(".drawer");
+                    if (!drawerNav || !window.drawerNavigation) {
+                        console.warn(
+                            "Drawer navigation not initialized, adding fallback links",
+                        );
+
+                        // Add fallback navigation
+                        const header = document.querySelector(".header-info");
+                        if (header) {
+                            const fallbackNav = document.createElement("div");
+                            fallbackNav.className = "fallback-navigation";
+                            fallbackNav.innerHTML = `
+                                <div style="margin-left: 15px; display: flex; gap: 15px;">
+                                    <a href="../augmentation/index.html" style="color: #cccccc; text-decoration: underline;">Augmentation</a>
+                                    <a href="../segmentation/index.html" style="color: #cccccc; text-decoration: underline;">Segmentation</a>
+                                </div>
+                            `;
+                            header.appendChild(fallbackNav);
+                        }
+                    }
+                }, 1000);
+            });
+        </script>
     </body>
 </html>
